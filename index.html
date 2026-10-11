@@ -324,6 +324,36 @@
 
     let dailyLimit = 60;
 
+    
+function saveProgress() {
+    const data = {
+        dailyLimit: dailyLimit,
+        remainingSeconds: remainingSeconds,
+        savedDate: new Date().toDateString()
+    };
+
+    localStorage.setItem("focusSocialData", JSON.stringify(data));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem("focusSocialData");
+
+    if (!saved) return;
+
+    try {
+        const data = JSON.parse(saved);
+        const today = new Date().toDateString();
+
+        if (data.savedDate === today) {
+            dailyLimit = data.dailyLimit;
+            remainingSeconds = data.remainingSeconds;
+        }
+    } catch (error) {
+        console.log("Gespeicherter Fortschritt konnte nicht geladen werden.");
+    }
+}
+
+
     let remainingSeconds = dailyLimit * 60;
 
     let timerRunning = false;
@@ -370,6 +400,7 @@
             document.getElementById("lockedScreen").style.display =
                 "flex";
         }
+   saveProgress();
     }
 
 
@@ -551,6 +582,7 @@ function lockNow() {
     // Sperrbildschirm anzeigen
     document.getElementById("lockedScreen").style.display = "flex";
 }
+    loadProgress();
     updateDisplay();
 
 </script>
