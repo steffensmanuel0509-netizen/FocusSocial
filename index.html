@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FocusSocial</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f7;
+            color: #111;
+        }
+
+        .app {
+            max-width: 500px;
+            min-height: 100vh;
+            margin: auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            margin-bottom: 5px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #777;
+        }
+
+        .timer-card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .timer-label {
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            font-size: 64px;
+            font-weight: bold;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #e5e5e5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #progress {
+            height: 100%;
+            width: 100%;
+            background: #111;
+            transition: width 0.5s;
+        }
+
+        button {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #startButton {
+            margin-top: 25px;
+            width: 100%;
+            background: #111;
+            color: white;
+        }
+
+        .settings {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .settings h2 {
+            margin-top: 0;
+        }
+
+        .limit-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .limit-control button {
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            font-size: 24px;
+            background: #eee;
+        }
+
+        #limit {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .services {
+            margin-top: 20px;
+        }
+
+        .service {
+            background: white;
+            margin-top: 10px;
+            padding: 18px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon {
+            font-size: 25px;
+        }
+
+        .check {
+            font-size: 20px;
+        }
+
+        .locked {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(245,245,247,0.98);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            z-index: 10;
+        }
+
+        .locked-content {
+            max-width: 400px;
+        }
+
+        .lock-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+
+        .locked h2 {
+            font-size: 30px;
+        }
+
+        .locked p {
+            color: #666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <h1>FocusSocial</h1>
+        <div class="subtitle">
+            Deine Social-Media-Zeit
+        </div>
+    </div>
+
+
+    <div class="timer-card">
+
+        <div class="timer-label">
+            Noch verfügbar
+        </div>
+
+        <div id="timer">
+            60:00
+        </div>
+
+        <div class="progress-container">
+            <div id="progress"></div>
+        </div>
+
+        <button id="startButton" onclick="toggleTimer()">
+            Timer starten
+        </button>
+
+    </div>
+
+
+    <div class="settings">
+
+        <h2>Tageslimit</h2>
+
+        <div class="limit-control">
+
+            <button onclick="changeLimit(-5)">
+                −
+            </button>
+
+            <div id="limit">
+                60 Minuten
+            </div>
+
+            <button onclick="changeLimit(5)">
+                +
+            </button>
+
+        </div>
+
+        <button
+    onclick="testOneMinute()"
+    style="width: 100%; margin-top: 15px; background: #eee;">
+    🧪 1-Minuten-Test
+</button>
+
+    <button
+    onclick="lockNow()"
+    style="width: 100%; margin-top: 10px; background: #111; color: white;">
+    🔒 Jetzt sperren
+</button>
+
+    </div>
+
+
+   <div class="services">
+
+    <h2>Deine Dienste</h2>
+
+    <div class="service" onclick="openService('youtube')">
+        <div class="service-left">
+            <span class="icon">▶️</span>
+            <span>YouTube</span>
+        </div>
+
+        <span class="check">✓</span>
+    </div>
+
+
+    <div class="service" onclick="openService('instagram')">
+        <div class="service-left">
+            <span class="icon">📸</span>
+            <span>Instagram</span>
+        </div>
+
+        <span class="check">✓</span>
+    </div>
+
+
+    <div class="service" onclick="openService('snapchat')">
+        <div class="service-left">
+            <span class="icon">👻</span>
+            <span>Snapchat</span>
+        </div>
+
+        <span class="check">✓</span>
+    </div>
+
+
+    <div class="service" onclick="openService('tiktok')">
+        <div class="service-left">
+            <span class="icon">🎵</span>
+            <span>TikTok</span>
+        </div>
+
+        <span class="check">✓</span>
+    </div>
+
+</div>
+</div>
+
+
+<!-- Sperrbildschirm -->
+
+<div class="locked" id="lockedScreen">
+
+    <div class="locked-content">
+
+        <div class="lock-icon">
+            🔒
+        </div>
+
+        <h2>Zeitlimit erreicht</h2>
+
+        <p>
+            Deine Social-Media-Zeit für heute ist abgelaufen.
+        </p>
+
+        <p>
+            FocusSocial hat die Nutzung beendet.
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let dailyLimit = 60;
+
+    let remainingSeconds = dailyLimit * 60;
+
+    let timerRunning = false;
+
+    let interval = null;
+
+    let socialMediaStartTime = null;
+    let socialMediaActive = false;
+
+
+    function updateDisplay() {
+
+        let minutes = Math.floor(remainingSeconds / 60);
+
+        let seconds = remainingSeconds % 60;
+
+        let formattedMinutes =
+            String(minutes).padStart(2, "0");
+
+        let formattedSeconds =
+            String(seconds).padStart(2, "0");
+
+
+        document.getElementById("timer").textContent =
+            formattedMinutes + ":" + formattedSeconds;
+
+
+        document.getElementById("limit").textContent =
+            dailyLimit + " Minuten";
+
+
+        let percentage =
+            (remainingSeconds / (dailyLimit * 60)) * 100;
+
+
+        document.getElementById("progress").style.width =
+            percentage + "%";
+
+
+        if (remainingSeconds <= 0) {
+
+            stopTimer();
+
+            document.getElementById("lockedScreen").style.display =
+                "flex";
+        }
+    }
+
+
+    function toggleTimer() {
+
+        if (timerRunning) {
+
+            stopTimer();
+
+        } else {
+
+            startTimer();
+
+        }
+
+    }
+
+
+    function startTimer() {
+
+        if (remainingSeconds <= 0) {
+            return;
+        }
+
+        timerRunning = true;
+
+        document.getElementById("startButton").textContent =
+            "Timer pausieren";
+
+
+       interval = setInterval(function() {
+    if (remainingSeconds > 0) {
+        remainingSeconds--;
+        updateDisplay();
+    }
+}, 1000);
+
+    }
+
+
+    function stopTimer() {
+
+        timerRunning = false;
+
+        clearInterval(interval);
+
+        document.getElementById("startButton").textContent =
+            "Timer starten";
+
+    }
+
+
+    function changeLimit(amount) {
+
+        if (timerRunning) {
+            return;
+        }
+
+        dailyLimit += amount;
+
+        if (dailyLimit < 5) {
+            dailyLimit = 5;
+        }
+
+        if (dailyLimit > 240) {
+            dailyLimit = 240;
+        }
+
+        remainingSeconds =
+            dailyLimit * 60;
+
+        updateDisplay();
+
+    }
+
+function openService(service) {
+
+    const urls = {
+        youtube: "https://www.youtube.com/",
+        instagram: "https://www.instagram.com/",
+        snapchat: "https://www.snapchat.com/",
+        tiktok: "https://www.tiktok.com/"
+    };
+
+    // Keine Social-Media-Nutzung mehr nach Ablauf des Limits
+    if (remainingSeconds <= 0) {
+        document.getElementById("lockedScreen").style.display = "flex";
+        return;
+    }
+
+    if (!urls[service]) {
+        return;
+    }
+
+    socialMediaActive = true;
+    socialMediaStartTime = Date.now();
+
+    if (!timerRunning) {
+        startTimer();
+    }
+
+    window.open(urls[service], "_blank");
+}
+
+document.addEventListener("visibilitychange", function() {
+
+    if (document.hidden) {
+        // FocusSocial wurde verlassen
+        if (socialMediaActive) {
+            socialMediaStartTime = Date.now();
+        }
+
+        stopTimer();
+
+    } else {
+
+        // FocusSocial wurde wieder geöffnet
+        if (socialMediaActive && socialMediaStartTime !== null) {
+
+            const elapsedSeconds = Math.floor(
+                (Date.now() - socialMediaStartTime) / 1000
+            );
+
+            remainingSeconds = Math.max(
+                0,
+                remainingSeconds - elapsedSeconds
+            );
+
+            socialMediaStartTime = null;
+
+            updateDisplay();
+
+            if (remainingSeconds <= 0) {
+                socialMediaActive = false;
+                return;
+            }
+
+            startTimer();
+        }
+    }
+});
+
+function testOneMinute() {
+
+    // Timer stoppen, falls er gerade läuft
+    stopTimer();
+
+    // Tageslimit auf 1 Minute setzen
+    dailyLimit = 1;
+
+    // Verbleibende Zeit auf 1 Minute setzen
+    remainingSeconds = 60;
+
+    // Sperrbildschirm schließen
+    document.getElementById("lockedScreen").style.display = "none";
+
+    // Anzeige aktualisieren
+    updateDisplay();
+
+    // Timer automatisch starten
+    startTimer();
+}
+
+function lockNow() {
+
+    // Timer sofort stoppen
+    stopTimer();
+
+    // Verbleibende Zeit auf 0 setzen
+    remainingSeconds = 0;
+
+    // Social-Media-Nutzung beenden
+    socialMediaActive = false;
+    socialMediaStartTime = null;
+
+    // Anzeige aktualisieren
+    updateDisplay();
+
+    // Sperrbildschirm anzeigen
+    document.getElementById("lockedScreen").style.display = "flex";
+}
+    updateDisplay();
+
+</script>
+
+</body>
+</html>
