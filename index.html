@@ -124,29 +124,141 @@
             margin-top: 20px;
         }
 
-        .service {
-            background: white;
-            margin-top: 10px;
-            padding: 18px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.services {
+    margin-top: 28px;
+}
 
-        .service-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+.services-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
 
-        .icon {
-            font-size: 25px;
-        }
+.services-heading h2 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+}
 
-        .check {
-            font-size: 20px;
-        }
+.view-toggle {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: #e9e9ed;
+    border-radius: 11px;
+}
+
+.view-button {
+    width: 38px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #777780;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.view-button.active {
+    background: white;
+    color: #222226;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.service-list.grid-view {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.service-list.list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.service {
+    box-sizing: border-box;
+    min-width: 0;
+    background: white;
+    padding: 16px;
+    border: 1px solid rgba(0,0,0,0.035);
+    border-radius: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.service:active {
+    transform: scale(0.98);
+    background: #f8f8fa;
+}
+
+.service-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: #f3f3f6;
+    font-size: 22px;
+}
+
+.service-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.service-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222226;
+}
+
+.service-description {
+    font-size: 11px;
+    line-height: 1.3;
+    color: #85858e;
+}
+
+.check {
+    font-size: 17px;
+    color: #777780;
+    flex-shrink: 0;
+}
+
+.service-list.list-view .service {
+    padding: 13px 16px;
+    border-radius: 15px;
+}
+
+.service-list.list-view .icon {
+    width: 40px;
+    height: 40px;
+}
+
+@media (max-width: 360px) {
+    .service-list.grid-view {
+        grid-template-columns: 1fr;
+    }
+}
 
         .locked {
             display: none;
@@ -250,47 +362,73 @@
 
    <div class="services">
 
-    <h2>Deine Dienste</h2>
+<div class="services">
 
-    <div class="service" onclick="openService('youtube')">
-        <div class="service-left">
-            <span class="icon">▶️</span>
-            <span>YouTube</span>
+    <div class="services-heading">
+        <h2>Deine Apps</h2>
+
+        <div class="view-toggle">
+            <button id="gridViewButton"
+                    class="view-button active"
+                    onclick="setServiceView('grid')"
+                    aria-label="Kachelansicht"
+                    aria-pressed="true">▦</button>
+
+            <button id="listViewButton"
+                    class="view-button"
+                    onclick="setServiceView('list')"
+                    aria-label="Listenansicht"
+                    aria-pressed="false">☷</button>
         </div>
-
-        <span class="check">✓</span>
     </div>
 
+    <div class="service-list grid-view" id="serviceList">
 
-    <div class="service" onclick="openService('instagram')">
-        <div class="service-left">
-            <span class="icon">📸</span>
-            <span>Instagram</span>
+        <div class="service" onclick="openService('youtube')">
+            <div class="service-left">
+                <span class="icon">▶️</span>
+                <div class="service-copy">
+                    <span class="service-name">YouTube</span>
+                    <span class="service-description">Videos</span>
+                </div>
+            </div>
+            <span class="check">✓</span>
         </div>
 
-        <span class="check">✓</span>
-    </div>
-
-
-    <div class="service" onclick="openService('snapchat')">
-        <div class="service-left">
-            <span class="icon">👻</span>
-            <span>Snapchat</span>
+        <div class="service" onclick="openService('instagram')">
+            <div class="service-left">
+                <span class="icon">📸</span>
+                <div class="service-copy">
+                    <span class="service-name">Instagram</span>
+                    <span class="service-description">Stories &amp; Nachrichten</span>
+                </div>
+            </div>
+            <span class="check">✓</span>
         </div>
 
-        <span class="check">✓</span>
-    </div>
-
-
-    <div class="service" onclick="openService('tiktok')">
-        <div class="service-left">
-            <span class="icon">🎵</span>
-            <span>TikTok</span>
+        <div class="service" onclick="openService('snapchat')">
+            <div class="service-left">
+                <span class="icon">👻</span>
+                <div class="service-copy">
+                    <span class="service-name">Snapchat</span>
+                    <span class="service-description">Snaps &amp; Chats</span>
+                </div>
+            </div>
+            <span class="check">✓</span>
         </div>
 
-        <span class="check">✓</span>
-    </div>
+        <div class="service" onclick="openService('tiktok')">
+            <div class="service-left">
+                <span class="icon">🎵</span>
+                <div class="service-copy">
+                    <span class="service-name">TikTok</span>
+                    <span class="service-description">Videos</span>
+                </div>
+            </div>
+            <span class="check">✓</span>
+        </div>
 
+    </div>
 </div>
 </div>
 
@@ -582,6 +720,38 @@ function lockNow() {
     // Sperrbildschirm anzeigen
     document.getElementById("lockedScreen").style.display = "flex";
 }
+
+function setServiceView(view) {
+    const serviceList = document.getElementById("serviceList");
+    const gridButton = document.getElementById("gridViewButton");
+    const listButton = document.getElementById("listViewButton");
+
+    if (!serviceList || !gridButton || !listButton) return;
+
+    const showGrid = view === "grid";
+
+    serviceList.classList.toggle("grid-view", showGrid);
+    serviceList.classList.toggle("list-view", !showGrid);
+
+    gridButton.classList.toggle("active", showGrid);
+    listButton.classList.toggle("active", !showGrid);
+
+    gridButton.setAttribute("aria-pressed", String(showGrid));
+    listButton.setAttribute("aria-pressed", String(!showGrid));
+
+    try {
+        localStorage.setItem("focusSocialServiceView", view);
+    } catch (error) {}
+}
+
+let savedServiceView = "grid";
+
+try {
+    savedServiceView = localStorage.getItem("focusSocialServiceView") || "grid";
+} catch (error) {}
+
+setServiceView(savedServiceView === "list" ? "list" : "grid");
+
     loadProgress();
     updateDisplay();
 
